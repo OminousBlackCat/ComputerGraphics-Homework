@@ -16,12 +16,48 @@ window.onload = function init(){
     }
 
     var vertices = new Float32Array ([
-        0.0,0.5,0.0,
-        0.42,-0.25,0.0,
-        -0.42,-0.25,0.0,
-        1.0,1.0,0,
+        -0.5,0.0,0.0,
+        -0.3,0.2,0.0,
+        -0.3,-0.2,0.0,
+
+        -0.3,0.2,0.0,
+        -0.4,0.2,0.0,
+        -0.4,0.4,0.0,
+
+        -0.3,0.2,0.0,
+        -0.4,0.4,0.0,
+        -0.2,0.3,0.0,
+
+        -0.3,0.2,0.0,
+        -0.2,0.2,0.0,
+        -0.2,0.3,0.0,
+
+        0.2,0.2,0.0,
+        0.2,0.3,0.0,
+        0.3,0.2,0.0,
+
+        0.3,0.2,0.0,
+        0.2,0.3,0.0,
+        0.4,0.4,0.0,
+
+        0.3,0.2,0.0,
+        0.4,0.4,0.0,
+        0.4,0.2,0.0,
+
+        0.3,0.2,0.0,
+        0.5,0.0,0.0,
+        0.3,-0.2,0.0,
+
+        -0.3,0.2,0.0,
+        0.3,0.2,0.0,
+        -0.3,-0.2,0.0,
+
+        -0.3,-0.2,0.0,
+        0.3,-0.2,0.0,
+        0.3,0.2,0.0
     ]);
-    myGL.clearColor(0.0,1.0,0.0,1.0);
+
+    myGL.clearColor(0.8,0.8,0.8,1.0);
 
     var shader = initShaders(myGL,"vertex-shader","fragment-shader");
     offset = myGL.getUniformLocation(shader,"offset");
@@ -51,14 +87,14 @@ window.onload = function init(){
 
             myGL.uniform4f(color,1.0,0.0,1.0,1.0);
             myGL.clear( myGL.COLOR_BUFFER_BIT );
-            myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+            myGL.drawArrays( myGL.TRIANGLES, 0,30 );
 
 
         }else {
             isClicked = false;
-            myGL.uniform4f(color,1.0,0.0,0.0,1.0);
+            myGL.uniform4f(color,1.0,1.0,0.0,1.0);
             myGL.clear( myGL.COLOR_BUFFER_BIT );
-            myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+            myGL.drawArrays( myGL.TRIANGLES, 0,30 );
         }
     });
 
@@ -72,7 +108,7 @@ window.onload = function init(){
             myGL.uniform2f(offset,keyX,keyY);
 
             myGL.clear( myGL.COLOR_BUFFER_BIT );
-            myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+            myGL.drawArrays( myGL.TRIANGLES, 0,30 );
         }
     });
 
@@ -81,21 +117,16 @@ window.onload = function init(){
         console.log(keyX);
         myGL.uniform2f(offset,keyX,keyY);
         myGL.clear( myGL.COLOR_BUFFER_BIT );
-        myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+        myGL.drawArrays( myGL.TRIANGLES, 0,30 );
     }
     function goRight(){
         keyX = keyX+0.02;
         console.log(keyX);
         myGL.uniform2f(offset,keyX,keyY);
         myGL.clear( myGL.COLOR_BUFFER_BIT );
-        myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+        myGL.drawArrays( myGL.TRIANGLES, 0,30 );
     }
-    function  goUp() {
-        keyY = keyY+0.02;
-        myGL.uniform2f(offset,keyX,keyY);
-        myGL.clear( myGL.COLOR_BUFFER_BIT );
-        myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
-    }
+
 
 
     function jump() {
@@ -116,7 +147,7 @@ window.onload = function init(){
         speed = speedOf((count-1)*0.02);
         myGL.uniform2f(offset,keyX,keyY);
         myGL.clear( myGL.COLOR_BUFFER_BIT );
-        myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+        myGL.drawArrays( myGL.TRIANGLES, 0,30 );
         setTimeout(
             function () {
                 if(keyY<maxHeight){
@@ -125,7 +156,7 @@ window.onload = function init(){
                     jumpDown();
                     return;
                 }
-            },10
+            },5
         )
     }
     function jumpDown(){
@@ -138,7 +169,7 @@ window.onload = function init(){
         speed = speedOf((count-1)*0.02);
         myGL.uniform2f(offset,keyX,keyY);
         myGL.clear( myGL.COLOR_BUFFER_BIT );
-        myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+        myGL.drawArrays( myGL.TRIANGLES, 0,30 );
         setTimeout(
             function () {
                 if(keyY>originY){
@@ -159,12 +190,10 @@ window.onload = function init(){
             case 'D':
                 goRight();
                 break;
+
             case ' ':
                 jump();
-                break;
-            case 'W':
-                goUp();
-                break;
+                break
         }
     };
     document.getElementById("selects").onclick = function (event) {
@@ -186,8 +215,8 @@ window.onload = function init(){
 
 function render() {
     myGL.uniform2f(offset,keyX,keyY);
-    myGL.uniform4f(color,1.0,0.0,0.0,1.0);
+    myGL.uniform4f(color,1.0,1.0,0.0,1.0);
     myGL.clear( myGL.COLOR_BUFFER_BIT );
-    myGL.drawArrays( myGL.TRIANGLE_STRIP, 0,4 );
+    myGL.drawArrays( myGL.TRIANGLES, 0,30 );
     // window.requestAnimFrame( render );
 }
