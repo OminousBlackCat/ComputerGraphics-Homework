@@ -60,8 +60,6 @@ window.onload = function init() {
         })
     });
 
-
-
     var grenadeOBJLoader = new THREE.OBJLoader();
     var grenadeMTLLoader = new THREE.MTLLoader();
     grenadeMTLLoader.load('Grenade.mtl', function(material){
@@ -75,10 +73,6 @@ window.onload = function init() {
         })
     });
 
-
-
-
-
     var light = new THREE.SpotLight(0xFFFFFF);//光源颜色
     light.position.set(20, 10, 5);//光源位置
     scene.add(light);//光源添加到场景中
@@ -88,7 +82,36 @@ window.onload = function init() {
     control.update();
 };
 
+function PortalR(){
+    portalMesh.rotation.Y = (portalMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(PortalR);
+}
 
+function HammerR(){
+    hammerMesh.rotation.Y = (hammerMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(HummerR);
+}
+
+function YoumuR(){
+    youmuMesh.rotation.Y = (youmuMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(PortalR);
+}
+
+function GrenadeR(){
+    grenadeMesh.rotation.Y = (grenadeMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(PortalR);
+}
+
+function stop(){
+    if(id!=null){
+        cancelAnimationFrame(id);
+        id=null;
+    }
+}
 
 function draw() {
     renderer.render(scene, camera);//调用WebGLRenderer的render函数刷新场景
