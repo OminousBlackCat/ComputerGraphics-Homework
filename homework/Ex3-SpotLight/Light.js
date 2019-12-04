@@ -20,7 +20,7 @@ window.onload = function init() {
     scene = new THREE.Scene();//创建场景
     camera = new THREE.PerspectiveCamera(45,1,0.1,100);//透视投影照相机
     camera.position.set(0, 5, 8);//相机位置
-    camera.lookAt(new THREE.Vector3(0, 5, 0));//lookAt()设置相机所看的位置
+    camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
 
     var portalOBJLoader = new THREE.OBJLoader();
@@ -31,7 +31,7 @@ window.onload = function init() {
             obj.scale.set(1,1,1);
             portalMesh = obj;
             console.log(portalMesh);
-            scene.add(obj);
+            scene.add(portalMesh);
         })
     });
 
@@ -44,7 +44,7 @@ window.onload = function init() {
             obj.scale.set(0.2,0.2,0.2);
             hammerMesh = obj;
             console.log(hammerMesh);
-            scene.add(obj);
+            scene.add(hammerMesh);
         })
     });
 
@@ -75,23 +75,18 @@ window.onload = function init() {
         })
     });
 
-    light = new THREE.SpotLight(0xFFFFFF);//光源颜色
-    light.position.set(0, 5, 0);//光源位置
-    scene.add(light);//光源添加到场景中
-    id = setInterval(draw,10);//每隔20s重绘一次
-
 
     document.getElementById("portalGun").onclick = function () {
+        camera.position.set(0, 5, 8);
         light.position.set(0,5,0);
-        control.object.position.set(0, 15, 10);
-        control.object.target(new THREE.Vector3(0, 5, 0));
-        control.update();
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
     };
     document.getElementById("hammer").onclick = function () {
         light.position.set(5,5,0);
-        control.object.position.set(5,15,10);
-        control.object.target(new THREE.Vector3(5, 5, 0));
-        control.update();
+        camera.position.set(5, 5, 8);
+        camera.lookAt(new THREE.Vector3(5, 0, 0));
+        HammerR();
     };
 
     document.getElementById("sword").onclick = function () {
@@ -101,8 +96,8 @@ window.onload = function init() {
         control.update();
     };
 
-    light = new THREE.SpotLight(0xFFFFFF,1,10,0.005,0);//光源颜色
-    light.position.set(0, 5, 0);//光源位置
+    light = new THREE.SpotLight(0xFFFFFF,1,10,1,0);//光源颜色
+    light.position.set(0, 5, 0);//光源位置置
     scene.add(light);//光源添加到场景中
     id = setInterval(draw,10);//每隔20s重绘一次
 
@@ -110,7 +105,35 @@ window.onload = function init() {
     control.update();
 };
 
+function PortalR(){
+    portalMesh.rotateY(Math.PI * -0.05);
+    requestAnimationFrame(PortalR);
+}
 
+function HammerR(){
+    hammerMesh.rotation.Y = (hammerMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(HammerR);
+}
+
+function YoumuR(){
+    youmuMesh.rotation.Y = (youmuMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(PortalR);
+}
+
+function GrenadeR(){
+    grenadeMesh.rotation.Y = (grenadeMesh.rotation.y + 0.01) % (Math.PI * 2);
+    renderer.render(scene,camera);
+    id = requestAnimationFrame(PortalR);
+}
+
+function stop(){
+    if(id!=null){
+        cancelAnimationFrame(id);
+        id=null;
+    }
+}
 
 function draw() {
     renderer.render(scene, camera);//调用WebGLRenderer的render函数刷新场景
