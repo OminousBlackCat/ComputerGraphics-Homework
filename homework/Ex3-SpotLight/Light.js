@@ -18,8 +18,8 @@ window.onload = function init() {
     myCanvas = document.getElementById('myCanvas');
     renderer.setClearColor(0x808080);//画布颜色
     scene = new THREE.Scene();//创建场景
-    camera = new THREE.PerspectiveCamera(45,1,0.1,100);//透视投影照相机
-    camera.position.set(0, 5, 8);//相机位置
+    camera = new THREE.PerspectiveCamera(45,1,0.1,300);//透视投影照相机
+    camera.position.set(0, 8, 10);//相机位置
     camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
 
@@ -41,7 +41,7 @@ window.onload = function init() {
         hammerOBJLoader.setMaterials(material);
         hammerOBJLoader.load('Mjolnir.obj',function (obj){
             obj.position.set(5,0,0);
-            obj.scale.set(0.2,0.2,0.2);
+            obj.scale.set(0.3,0.3,0.3);
             hammerMesh = obj;
             console.log(hammerMesh);
             scene.add(hammerMesh);
@@ -55,7 +55,7 @@ window.onload = function init() {
         youmuOBJLoader.setMaterials(material);
         youmuOBJLoader.load('katana.obj',function (obj){
             obj.position.set(10,0,0);
-            obj.scale.set(0.02,0.02,0.02);
+            obj.scale.set(0.012,0.012,0.012);
             swordMesh = obj;
             console.log(swordMesh);
             scene.add(obj);
@@ -76,56 +76,78 @@ window.onload = function init() {
     });
 
 
+
+
     document.getElementById("portalGun").onclick = function () {
-        camera.position.set(0, 5, 8);
         light.position.set(0,5,0);
+        light.target = portalMesh;
+        camera.position.set(0, 8, 10);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     };
     document.getElementById("hammer").onclick = function () {
         light.position.set(5,5,0);
-        camera.position.set(5, 5, 8);
+        light.target = hammerMesh;
+        camera.position.set(5, 8, 10);
         camera.lookAt(new THREE.Vector3(5, 0, 0));
-        HammerR();
+
+
     };
 
     document.getElementById("sword").onclick = function () {
         light.position.set(10,5,0);
-        control.object.position.set(10, 15, 10);
-        control.object.target(new THREE.Vector3(10, 5, 0));
-        control.update();
+        light.target = swordMesh;
+        camera.position.set(10, 8, 10);
+        camera.lookAt(new THREE.Vector3(10, 0, 0));
+        console.log(light);
+
     };
 
-    light = new THREE.SpotLight(0xFFFFFF,1,10,1,0);//光源颜色
+    document.getElementById('grenade').onclick = function () {
+        light.position.set(15,5,0);
+        light.target = grenadeMesh;
+
+        camera.position.set(15, 8, 10);
+        camera.lookAt(new THREE.Vector3(15, 0, 0));
+    };
+
+    document.getElementById('rotate').onclick = function () {
+        PortalR();
+        HammerR();
+        YoumuR();
+        GrenadeR();
+    };
+
+    light = new THREE.SpotLight(0x7FFF00,1,30,0.5,0);//光源颜色
     light.position.set(0, 5, 0);//光源位置置
     scene.add(light);//光源添加到场景中
     id = setInterval(draw,10);//每隔20s重绘一次
+
+
 
     control = new THREE.OrbitControls(camera,renderer.domElement);
     control.update();
 };
 
+
 function PortalR(){
-    portalMesh.rotateY(Math.PI * -0.05);
+    portalMesh.rotateY(Math.PI * -0.005);
     requestAnimationFrame(PortalR);
 }
 
 function HammerR(){
-    hammerMesh.rotation.Y = (hammerMesh.rotation.y + 0.01) % (Math.PI * 2);
-    renderer.render(scene,camera);
-    id = requestAnimationFrame(HammerR);
+    hammerMesh.rotateY(Math.PI * -0.005);
+    requestAnimationFrame(HammerR);
 }
 
 function YoumuR(){
-    youmuMesh.rotation.Y = (youmuMesh.rotation.y + 0.01) % (Math.PI * 2);
-    renderer.render(scene,camera);
-    id = requestAnimationFrame(PortalR);
+    swordMesh.rotateY(Math.PI * -0.005);
+    requestAnimationFrame(YoumuR);
 }
 
 function GrenadeR(){
-    grenadeMesh.rotation.Y = (grenadeMesh.rotation.y + 0.01) % (Math.PI * 2);
-    renderer.render(scene,camera);
-    id = requestAnimationFrame(PortalR);
+    grenadeMesh.rotateY(Math.PI * -0.005);
+    requestAnimationFrame(GrenadeR);
 }
 
 function stop(){
