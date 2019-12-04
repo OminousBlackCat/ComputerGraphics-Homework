@@ -81,14 +81,14 @@ window.onload = function init() {
     document.getElementById("portalGun").onclick = function () {
         light.position.set(0,5,0);
         light.target = portalMesh;
-        camera.position.set(0, 8, 10);
+        camera.position.set(0, 7.5, 10);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     };
     document.getElementById("hammer").onclick = function () {
         light.position.set(5,5,0);
         light.target = hammerMesh;
-        camera.position.set(5, 8, 10);
+        camera.position.set(5, 7.5, 10);
         camera.lookAt(new THREE.Vector3(5, 0, 0));
 
 
@@ -97,7 +97,7 @@ window.onload = function init() {
     document.getElementById("sword").onclick = function () {
         light.position.set(10,5,0);
         light.target = swordMesh;
-        camera.position.set(10, 8, 10);
+        camera.position.set(10, 7.5, 10);
         camera.lookAt(new THREE.Vector3(10, 0, 0));
         console.log(light);
 
@@ -107,7 +107,7 @@ window.onload = function init() {
         light.position.set(15,5,0);
         light.target = grenadeMesh;
 
-        camera.position.set(15, 8, 10);
+        camera.position.set(15, 7.5, 10);
         camera.lookAt(new THREE.Vector3(15, 0, 0));
     };
 
@@ -118,8 +118,36 @@ window.onload = function init() {
         GrenadeR();
     };
 
+    document.getElementById('near').onclick = function () {
+        zoomIn();
+    };
+
+    document.getElementById('far').onclick = function () {
+        zoomOut();
+    };
+
+    window.onkeydown = function(event) {
+        var key = String.fromCharCode(event.keyCode);
+        switch (key) {
+            case 'W':
+                stop = 0;
+                zoomIn();
+                break;
+            case 'S':
+                stop = 0;
+                zoomOut();
+                break;
+        }
+    };
+
+
     light = new THREE.SpotLight(0x7FFF00,1,30,0.5,0);//光源颜色
     light.position.set(0, 5, 0);//光源位置置
+    var object = new THREE.Object3D();
+    object.position.set(0,0,0);
+    light.target = object;
+
+    scene.add(object);
     scene.add(light);//光源添加到场景中
     id = setInterval(draw,10);//每隔20s重绘一次
 
@@ -129,6 +157,23 @@ window.onload = function init() {
     control.update();
 };
 
+var zoomparameter  = 0.3;
+function zoomIn() {
+    if(camera.position.y > 1.5){
+        camera.position.y -= (0.15 * zoomparameter);
+        camera.position.z -= (0.2 * zoomparameter);
+        renderer.render(scene,camera);
+    }
+}
+
+function zoomOut() {
+    if(camera.position.y < 15){
+        camera.position.y += (0.15 * zoomparameter);
+        camera.position.z += (0.2 * zoomparameter);
+        renderer.render(scene,camera);
+    }
+
+}
 
 function PortalR(){
     portalMesh.rotateY(Math.PI * -0.005);
