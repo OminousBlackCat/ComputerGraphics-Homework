@@ -1,12 +1,14 @@
 var scene = null;
 var camera = null;
 var renderer = null;
+var control = null;
 var portalMesh = null;
 var hammerMesh = null;
-var youmuMesh = null;
+var swordMesh = null;
 var grenadeMesh = null;
 var id = null;
 var myCanvas = null;
+var light = null;
 
 
 window.onload = function init() {
@@ -17,7 +19,7 @@ window.onload = function init() {
     renderer.setClearColor(0x808080);//画布颜色
     scene = new THREE.Scene();//创建场景
     camera = new THREE.PerspectiveCamera(45,1,0.1,100);//透视投影照相机
-    camera.position.set(0, 25, -10);//相机位置
+    camera.position.set(0, 5, 8);//相机位置
     camera.lookAt(new THREE.Vector3(0, 5, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
 
@@ -54,13 +56,11 @@ window.onload = function init() {
         youmuOBJLoader.load('katana.obj',function (obj){
             obj.position.set(10,0,0);
             obj.scale.set(0.02,0.02,0.02);
-            youmuMesh = obj;
-            console.log(youmuMesh);
+            swordMesh = obj;
+            console.log(swordMesh);
             scene.add(obj);
         })
     });
-
-
 
     var grenadeOBJLoader = new THREE.OBJLoader();
     var grenadeMTLLoader = new THREE.MTLLoader();
@@ -68,23 +68,45 @@ window.onload = function init() {
         grenadeOBJLoader.setMaterials(material);
         grenadeOBJLoader.load('Grenade.obj',function (obj){
             obj.position.set(15,0,0);
-            obj.scale.set(0.1,0.1,0.1);
+            obj.scale.set(0.005,0.005,0.005);
             grenadeMesh = obj;
             console.log(grenadeMesh);
             scene.add(obj);
         })
     });
 
-
-
-
-
-    var light = new THREE.SpotLight(0xFFFFFF);//光源颜色
-    light.position.set(20, 10, 5);//光源位置
+    light = new THREE.SpotLight(0xFFFFFF);//光源颜色
+    light.position.set(0, 5, 0);//光源位置
     scene.add(light);//光源添加到场景中
     id = setInterval(draw,10);//每隔20s重绘一次
 
-    var control = new THREE.OrbitControls(camera,renderer.domElement);
+
+    document.getElementById("portalGun").onclick = function () {
+        light.position.set(0,5,0);
+        control.object.position.set(0, 15, 10);
+        control.object.target(new THREE.Vector3(0, 5, 0));
+        control.update();
+    };
+    document.getElementById("hammer").onclick = function () {
+        light.position.set(5,5,0);
+        control.object.position.set(5,15,10);
+        control.object.target(new THREE.Vector3(5, 5, 0));
+        control.update();
+    };
+
+    document.getElementById("sword").onclick = function () {
+        light.position.set(10,5,0);
+        control.object.position.set(10, 15, 10);
+        control.object.target(new THREE.Vector3(10, 5, 0));
+        control.update();
+    };
+
+    light = new THREE.SpotLight(0xFFFFFF,1,10,0.005,0);//光源颜色
+    light.position.set(0, 5, 0);//光源位置
+    scene.add(light);//光源添加到场景中
+    id = setInterval(draw,10);//每隔20s重绘一次
+
+    control = new THREE.OrbitControls(camera,renderer.domElement);
     control.update();
 };
 
