@@ -26,7 +26,7 @@ window.onload = function init() {
     scene.add(camera);//把相机添加到场景中
 
     var planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
-    var planeMaterial = new THREE.MeshBasicMaterial({color: 0xcccccc});
+    var planeMaterial = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
     var plane = new THREE.Mesh(planeGeometry,planeMaterial);
     scene.add(plane);
     plane.rotation.x = -0.5*Math.PI;
@@ -39,6 +39,10 @@ window.onload = function init() {
         portalOBJLoader.setMaterials(material);
         portalOBJLoader.load('Portal Gun.obj',function (obj){
             obj.scale.set(1,1,1);
+            for(k in obj.children){
+                obj.children[k].castShadow = true;
+                obj.children[k].receiveShadow = true;
+            }
             portalMesh = obj;
             console.log(portalMesh);
             portalMesh.castShadow = true;
@@ -54,6 +58,10 @@ window.onload = function init() {
         hammerOBJLoader.load('Mjolnir.obj',function (obj){
             obj.position.set(5,0,0);
             obj.scale.set(0.3,0.3,0.3);
+            for(k in obj.children){
+                obj.children[k].castShadow = true;
+                obj.children[k].receiveShadow = true;
+            }
             hammerMesh = obj;
             console.log(hammerMesh);
             hammerMesh.castShadow = true;
@@ -70,6 +78,10 @@ window.onload = function init() {
         youmuOBJLoader.load('katana.obj',function (obj){
             obj.position.set(10,0,0);
             obj.scale.set(0.012,0.012,0.012);
+            for(k in obj.children){
+                obj.children[k].castShadow = true;
+                obj.children[k].receiveShadow = true;
+            }
             swordMesh = obj;
             console.log(swordMesh);
             swordMesh.castShadow = true;
@@ -84,23 +96,16 @@ window.onload = function init() {
         grenadeOBJLoader.load('Grenade.obj',function (obj){
             obj.position.set(15,0,0);
             obj.scale.set(0.005,0.005,0.005);
+            for(k in obj.children){
+                obj.children[k].castShadow = true;
+                obj.children[k].receiveShadow = true;
+            }
+            obj.castShadow = true;
             grenadeMesh = obj;
             console.log(grenadeMesh);
-            grenadeMesh.castShadow = true;
             scene.add(grenadeMesh);
         })
     });
-
-    var sphereGeo = new THREE.SphereGeometry(0.5, 8, 8);//创建球体
-    var sphereMat = new THREE.MeshLambertMaterial({//创建材料
-        color:0x0000FF,
-        wireframe:false
-    });
-    var sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);//创建球体网格模型
-    sphereMesh.position.set(1, 0, 0);//设置球的坐标
-    sphereMesh.castShadow = true;//允许投射阴影
-    sphereMesh.receiveShadow = true;//允许接收阴影
-    scene.add(sphereMesh);//将球体添加到场景
 
 
     document.body.onmousewheel = function(event) {
@@ -176,9 +181,15 @@ window.onload = function init() {
                 zoomOut();
                 break;
             case 'A':
-                lightLeft();
+                cameraLeft();
                 break;
             case 'D':
+                cameraRight();
+                break;
+            case 'Q':
+                lightLeft();
+                break;
+            case 'E':
                 lightRight();
                 break;
         }
@@ -193,7 +204,11 @@ window.onload = function init() {
     light.castShadow = true;
     light.shadowCameraVisible = true;
     light.shadow.camera.near = 0.5;
-    light.shadow.camera.far = 50;
+    light.shadow.camera.far = 20;
+    light.shadowMapHeight = 1024;
+    light.shadowMapWidth = 1024;
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
 
     scene.add(object);
     scene.add(light);//光源添加到场景中
@@ -201,8 +216,8 @@ window.onload = function init() {
 
     var helper = new THREE.CameraHelper(light.shadow.camera );
     scene.add(helper);
-    control = new THREE.OrbitControls(camera,renderer.domElement);
-    control.update();
+    // control = new THREE.OrbitControls(camera,renderer.domElement);
+    // control.update();
 };
 
 
@@ -223,17 +238,31 @@ function zoomOut() {
     }
 }
 
+function cameraLeft() {
+    if(camera.position.x >= -5){
+        camera.position.x -= 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function cameraRight() {
+    if(camera.position.x <= 20){
+        camera.position.x += 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
 function lightLeft() {
     if(light.position.x >= -5){
         light.position.x -= 0.2;
-        renderer.render(scene.camera);
+        renderer.render(scene,camera);
     }
 }
 
 function lightRight() {
     if(light.position.x <= 20){
         light.position.x += 0.2;
-        renderer.render(scene.camera);
+        renderer.render(scene,camera);
     }
 }
 
