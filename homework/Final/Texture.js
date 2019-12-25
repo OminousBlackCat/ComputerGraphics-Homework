@@ -2,6 +2,7 @@ var scene = null;
 var camera = null;
 var renderer = null;
 var control = null;
+
 var id = null;
 var myCanvas = null;
 var light = null;
@@ -21,13 +22,22 @@ window.onload = function init() {
     camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
 
-    var planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
-    var planeMaterial = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var plane = new THREE.Mesh(planeGeometry,planeMaterial);
-    scene.add(plane);
-    plane.rotation.x = -0.5*Math.PI;
-    plane.position.y = -0.8;
-    plane.receiveShadow = true;
+
+
+
+
+    var plane2Geometry = new THREE.PlaneGeometry(30,5,1,1);
+    var plane2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var plane2 = new THREE.Mesh(plane2Geometry,plane2Material);
+    scene.add(plane2);
+    plane2.rotation.x = -0.5*Math.PI;
+    plane2.position.y = -0.8;
+    plane2.position.x = 0;
+    plane2.receiveShadow = true;
+
+
+
+
 
     document.body.onmousewheel = function(event) {
         event = event || window.event;
@@ -40,7 +50,36 @@ window.onload = function init() {
     };
 
 
-    light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.5);//光源颜色
+
+    window.onkeydown = function(event) {
+        var key = String.fromCharCode(event.keyCode);
+        switch (key) {
+            case 'W':
+                stop = 0;
+                zoomIn();
+                break;
+            case 'S':
+                stop = 0;
+                zoomOut();
+                break;
+            case 'A':
+                cameraLeft();
+                break;
+            case 'D':
+                cameraRight();
+                break;
+            case 'Q':
+                lightLeft();
+                break;
+            case 'E':
+                lightRight();
+                break;
+        }
+    };
+
+
+
+    light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
     light.position.set(0, 5, 0);//光源位置置
     var object = new THREE.Object3D();
     object.position.set(0,0,0);
@@ -77,6 +116,34 @@ function zoomOut() {
     if(camera.position.y < 15){
         camera.position.y += (0.15 * zoomparameter);
         camera.position.z += (0.2 * zoomparameter);
+        renderer.render(scene,camera);
+    }
+}
+
+function cameraLeft() {
+    if(camera.position.x >= -5){
+        camera.position.x -= 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function cameraRight() {
+    if(camera.position.x <= 20){
+        camera.position.x += 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function lightLeft() {
+    if(light.position.x >= -5){
+        light.position.x -= 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function lightRight() {
+    if(light.position.x <= 20){
+        light.position.x += 0.2;
         renderer.render(scene,camera);
     }
 }
