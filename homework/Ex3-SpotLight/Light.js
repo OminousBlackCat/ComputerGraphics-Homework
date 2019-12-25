@@ -230,6 +230,7 @@ window.onload = function init() {
     };
 
 
+
     light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
     light.position.set(0, 5, 0);//光源位置置
     var object = new THREE.Object3D();
@@ -250,8 +251,7 @@ window.onload = function init() {
 
     var helper = new THREE.CameraHelper(light.shadow.camera );
     scene.add(helper);
-    // control = new THREE.OrbitControls(camera,renderer.domElement);
-    // control.update();
+
 };
 
 
