@@ -1,7 +1,10 @@
 var scene = null;
 var camera = null;
 var renderer = null;
-var control = null;
+var Cube1Mesh = null;
+var Cube2Mesh = null;
+var Globe1Mesh = null;
+var Globe2Mesh = null;
 var id = null;
 var myCanvas = null;
 var light = null;
@@ -29,6 +32,42 @@ window.onload = function init() {
     plane.position.y = -0.8;
     plane.receiveShadow = true;
 
+    var Cube1Geometry = new THREE.CubeGeometry(5,5,5,1,1,1);
+    var Cube1Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var Cube1Mesh = new THREE.Mesh(Cube1Geometry,Cube1Material);
+    Cube1Mesh.setPosition(0,0,0);
+    scene.add(Cube1Mesh);
+    Cube1Mesh.rotation.x = -0.5*Math.PI;
+    Cube1Mesh.position.y = -0.8;
+    Cube1Mesh.receiveShadow = true;
+
+    var Cube2Geometry = new THREE.CubeGeometry(5,5,5,1,1,1);
+    var Cube2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var Cube2Mesh = new THREE.Mesh(Cube2Geometry,Cube2Material);
+    Cube2Mesh.setPosition(10,0,0);
+    scene.add(Cube2Mesh);
+    Cube2Mesh.rotation.x = -0.5*Math.PI;
+    Cube2Mesh.position.y = -0.8;
+    Cube2Mesh.receiveShadow = true;
+
+    var Globe1Geometry = new THREE.SphereGeometry(5, 40, 40);
+    var Globe1Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var Globe1Mesh = new THREE.Mesh(Globe1Geometry,Globe1Material);
+    Globe1Mesh.setPosition(20,0,0);
+    scene.add(Globe1Mesh);
+    Globe1Mesh.rotation.x = -0.5*Math.PI;
+    Globe1Mesh.position.y = -0.8;
+    Globe1Mesh.receiveShadow = true;
+
+    var Globe2Geometry = new THREE.SphereGeometry(5, 40, 40);
+    var Globe2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var Globe2Mesh = new THREE.Mesh(Globe2Geometry,Globe2Material);
+    Globe2Mesh.setPosition(30,0,0);
+    scene.add(Globe2Mesh);
+    Globe2Mesh.rotation.x = -0.5*Math.PI;
+    Globe2Mesh.position.y = -0.8;
+    Globe2Mesh.receiveShadow = true;
+
     document.body.onmousewheel = function(event) {
         event = event || window.event;
         if(event.deltaY < 0){
@@ -36,6 +75,48 @@ window.onload = function init() {
         }
         if(event.deltaY > 0){
             zoomOut();
+        }
+    };
+
+    document.getElementById('near').onclick = function () {
+        zoomIn();
+    };
+
+    document.getElementById('far').onclick = function () {
+        zoomOut();
+    };
+
+    document.getElementById('left').onclick = function() {
+        lightLeft();
+    };
+
+    document.getElementById('right').onclick = function() {
+        lightRight();
+    };
+
+    window.onkeydown = function(event) {
+        var key = String.fromCharCode(event.keyCode);
+        switch (key) {
+            case 'W':
+                stop = 0;
+                zoomIn();
+                break;
+            case 'S':
+                stop = 0;
+                zoomOut();
+                break;
+            case 'A':
+                cameraLeft();
+                break;
+            case 'D':
+                cameraRight();
+                break;
+            case 'Q':
+                lightLeft();
+                break;
+            case 'E':
+                lightRight();
+                break;
         }
     };
 
@@ -80,6 +161,35 @@ function zoomOut() {
         renderer.render(scene,camera);
     }
 }
+
+function cameraLeft() {
+    if(camera.position.x >= -5){
+        camera.position.x -= 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function cameraRight() {
+    if(camera.position.x <= 20){
+        camera.position.x += 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function lightLeft() {
+    if(light.position.x >= -5){
+        light.position.x -= 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
+function lightRight() {
+    if(light.position.x <= 20){
+        light.position.x += 0.2;
+        renderer.render(scene,camera);
+    }
+}
+
 
 function draw() {
     renderer.render(scene, camera);//调用WebGLRenderer的render函数刷新场景
