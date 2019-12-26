@@ -25,13 +25,47 @@ window.onload = function init() {
     camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
 
-    var planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
-    var planeMaterial = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var plane = new THREE.Mesh(planeGeometry,planeMaterial);
-    scene.add(plane);
-    plane.rotation.x = -0.5*Math.PI;
-    plane.position.y = -0.8;
-    plane.receiveShadow = true;
+
+    var plane1Geometry = new THREE.PlaneGeometry(5,5,1,1);
+    var plane1Material = new THREE.MeshBasicMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var plane1 = new THREE.Mesh(plane1Geometry,plane1Material);
+    scene.add(plane1);
+    plane1.rotation.x = -0.5*Math.PI;
+    plane1.position.y = -0.8;
+    plane1.receiveShadow = true;
+
+
+    var plane2Geometry = new THREE.PlaneGeometry(5,5,1,1);
+    var plane2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var plane2 = new THREE.Mesh(plane2Geometry,plane2Material);
+    scene.add(plane2);
+    plane2.rotation.x = -0.5*Math.PI;
+    plane2.position.y = -0.8;
+    plane2.position.x = 5;
+    plane2.receiveShadow = true;
+
+
+    var plane3Geometry = new THREE.PlaneGeometry(5,5,1,1);
+    var plane3Material = new THREE.MeshStandardMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var plane3 = new THREE.Mesh(plane3Geometry,plane3Material);
+    scene.add(plane3);
+    plane3.rotation.x = -0.5*Math.PI;
+    plane3.position.y = -0.8;
+    plane3.position.x = 10;
+    plane3.receiveShadow = true;
+
+
+    var plane4Geometry = new THREE.PlaneGeometry(5,5,1,1);
+    var plane4Material = new THREE.MeshToonMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var plane4 = new THREE.Mesh(plane4Geometry,plane4Material);
+    scene.add(plane4);
+    plane4.rotation.x = -0.5*Math.PI;
+    plane4.position.y = -0.8;
+    plane4.position.x = 15;
+    plane4.receiveShadow = true;
+
+
+
 
     var portalOBJLoader = new THREE.OBJLoader();
     var portalMTLLoader = new THREE.MTLLoader();
@@ -196,7 +230,8 @@ window.onload = function init() {
     };
 
 
-    light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.5);//光源颜色
+
+    light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
     light.position.set(0, 5, 0);//光源位置置
     var object = new THREE.Object3D();
     object.position.set(0,0,0);

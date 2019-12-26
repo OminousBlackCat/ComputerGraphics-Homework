@@ -35,6 +35,7 @@ window.onload = function init() {
     scene.add(camera);//把相机添加到场景中
 
 
+
     var plane2Geometry = new THREE.PlaneGeometry(30,5,1,1);
     var plane2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
     var plane2 = new THREE.Mesh(plane2Geometry,plane2Material);
@@ -48,13 +49,14 @@ window.onload = function init() {
     var textureB = new THREE.TextureLoader().load("Textures/90003bump.jpg");
 
 
+
     var cubeGeo = new THREE.CubeGeometry(2, 2, 2, 5, 5, 5);
     var cubeMat = new THREE.MeshPhongMaterial({
         wireframe:false
     });
-    cubeMat.map = texture;
+    cubeMat.Map = texture;
     cubeMat.bumpMap = textureB;
-    cubeMat.bumpscale = 0.4;
+    cubeMat.bumpScale = 0.5;
     cubeMesh = new THREE.Mesh(cubeGeo, cubeMat);
     cubeMesh.rotation.y = -0.25*Math.PI;
     cubeMesh.position.set(1, 0.5, 0);
@@ -122,6 +124,7 @@ window.onload = function init() {
 
 
     light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
+
     light.position.set(0, 5, 0);//光源位置置
     var object = new THREE.Object3D();
     object.position.set(0,0,0);
