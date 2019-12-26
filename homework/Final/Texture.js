@@ -1,10 +1,9 @@
 var scene = null;
 var camera = null;
 var renderer = null;
-var Cube1Mesh = null;
-var Cube2Mesh = null;
-var Globe1Mesh = null;
-var Globe2Mesh = null;
+var control = null;
+var cubeMesh = null;
+var sphereMesh = null;
 var id = null;
 var myCanvas = null;
 var light = null;
@@ -19,54 +18,54 @@ window.onload = function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setClearColor(0x000000);//画布颜色
     scene = new THREE.Scene();//创建场景
+
     camera = new THREE.PerspectiveCamera(45,1,0.1,300);//透视投影照相机
-    camera.position.set(0, 8, 10);//相机位置
+    camera.position.set(0, 10, 10);//相机位置
     camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
 
-    var planeGeometry = new THREE.PlaneGeometry(60,20,1,1);
-    var planeMaterial = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var plane = new THREE.Mesh(planeGeometry,planeMaterial);
-    scene.add(plane);
-    plane.rotation.x = -0.5*Math.PI;
-    plane.position.y = -0.8;
-    plane.receiveShadow = true;
 
-    var Cube1Geometry = new THREE.CubeGeometry(5,5,5,1,1,1);
-    var Cube1Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var Cube1Mesh = new THREE.Mesh(Cube1Geometry,Cube1Material);
-    Cube1Mesh.setPosition(0,0,0);
-    scene.add(Cube1Mesh);
-    Cube1Mesh.rotation.x = -0.5*Math.PI;
-    Cube1Mesh.position.y = -0.8;
-    Cube1Mesh.receiveShadow = true;
+    var plane2Geometry = new THREE.PlaneGeometry(30,5,1,1);
+    var plane2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
+    var plane2 = new THREE.Mesh(plane2Geometry,plane2Material);
+    scene.add(plane2);
+    plane2.rotation.x = -0.5*Math.PI;
+    plane2.position.y = -0.8;
+    plane2.position.x = 0;
+    plane2.receiveShadow = true;
 
-    var Cube2Geometry = new THREE.CubeGeometry(5,5,5,1,1,1);
-    var Cube2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var Cube2Mesh = new THREE.Mesh(Cube2Geometry,Cube2Material);
-    Cube2Mesh.setPosition(10,0,0);
-    scene.add(Cube2Mesh);
-    Cube2Mesh.rotation.x = -0.5*Math.PI;
-    Cube2Mesh.position.y = -0.8;
-    Cube2Mesh.receiveShadow = true;
+    var texture = new THREE.TextureLoader().load( "Textures/90002.jpg" );
+    var textureB = new THREE.TextureLoader().load("Textures/90002bump.jpg");
 
-    var Globe1Geometry = new THREE.SphereGeometry(5, 40, 40);
-    var Globe1Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var Globe1Mesh = new THREE.Mesh(Globe1Geometry,Globe1Material);
-    Globe1Mesh.setPosition(20,0,0);
-    scene.add(Globe1Mesh);
-    Globe1Mesh.rotation.x = -0.5*Math.PI;
-    Globe1Mesh.position.y = -0.8;
-    Globe1Mesh.receiveShadow = true;
 
-    var Globe2Geometry = new THREE.SphereGeometry(5, 40, 40);
-    var Globe2Material = new THREE.MeshPhysicalMaterial({color: 0xcccccc,side: THREE.DoubleSide});
-    var Globe2Mesh = new THREE.Mesh(Globe2Geometry,Globe2Material);
-    Globe2Mesh.setPosition(30,0,0);
-    scene.add(Globe2Mesh);
-    Globe2Mesh.rotation.x = -0.5*Math.PI;
-    Globe2Mesh.position.y = -0.8;
-    Globe2Mesh.receiveShadow = true;
+    var cubeGeo = new THREE.CubeGeometry(2, 2, 2, 5, 5, 5);
+    var cubeMat = new THREE.MeshPhongMaterial({
+        wireframe:false
+    });
+    cubeMat.map = texture;
+    cubeMat.bumpmap = textureB;
+    cubeMat.bumpscal = 1;
+    cubeMesh = new THREE.Mesh(cubeGeo, cubeMat);
+    cubeMesh.rotation.y = -0.25*Math.PI;
+    cubeMesh.position.set(0, 0.5, 0);
+    cubeMesh.castShadow = true;
+    scene.add(cubeMesh);
+
+
+
+    var sphereGeo = new THREE.SphereGeometry(1.5, 40, 16);//创建球体
+    var sphereMat = new THREE.MeshPhongMaterial({//创建材料
+        wireframe:false
+    });
+    sphereMat.map = texture;
+    sphereMat.bumpmap = textureB;
+    sphereMat.bumpscal = 0.4;
+    sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);//创建球体网格模型
+    sphereMesh.position.set(4, 0, 0);//设置球的坐标
+    sphereMesh.castShadow = true;
+    scene.add(sphereMesh);
+
+
 
     document.body.onmousewheel = function(event) {
         event = event || window.event;
@@ -78,21 +77,7 @@ window.onload = function init() {
         }
     };
 
-    document.getElementById('near').onclick = function () {
-        zoomIn();
-    };
 
-    document.getElementById('far').onclick = function () {
-        zoomOut();
-    };
-
-    document.getElementById('left').onclick = function() {
-        lightLeft();
-    };
-
-    document.getElementById('right').onclick = function() {
-        lightRight();
-    };
 
     window.onkeydown = function(event) {
         var key = String.fromCharCode(event.keyCode);
@@ -121,7 +106,8 @@ window.onload = function init() {
     };
 
 
-    light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.5);//光源颜色
+
+    light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
     light.position.set(0, 5, 0);//光源位置置
     var object = new THREE.Object3D();
     object.position.set(0,0,0);
@@ -189,7 +175,6 @@ function lightRight() {
         renderer.render(scene,camera);
     }
 }
-
 
 function draw() {
     renderer.render(scene, camera);//调用WebGLRenderer的render函数刷新场景
