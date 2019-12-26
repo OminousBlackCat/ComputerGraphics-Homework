@@ -18,12 +18,11 @@ window.onload = function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.setClearColor(0x000000);//画布颜色
     scene = new THREE.Scene();//创建场景
+
     camera = new THREE.PerspectiveCamera(45,1,0.1,300);//透视投影照相机
-    camera.position.set(0, 8, 10);//相机位置
+    camera.position.set(0, 10, 10);//相机位置
     camera.lookAt(new THREE.Vector3(0, 0, 0));//lookAt()设置相机所看的位置
     scene.add(camera);//把相机添加到场景中
-
-
 
 
 
@@ -37,15 +36,22 @@ window.onload = function init() {
     plane2.receiveShadow = true;
 
 
+    var texture = new THREE.TextureLoader().load( "Textures/90002.jpg" );
+    var textureB = new THREE.TextureLoader().load("Textures/90002bump.jpg");
+
 
     var cubeGeo = new THREE.CubeGeometry(2, 2, 2, 5, 5, 5);
     var cubeMat = new THREE.MeshPhongMaterial({
-        color:0xFF0000,
+        color:0xFFFFFF,
         wireframe:false
     });
+    cubeMat.map = texture;
+    cubeMat.bumpmap = textureB;
+    cubeMat.bumpscal = 0.5;
     cubeMesh = new THREE.Mesh(cubeGeo, cubeMat);
     cubeMesh.rotation.y = -0.25*Math.PI;
     cubeMesh.position.set(0, 0.5, 0);
+    cubeMesh.castShadow = true;
     scene.add(cubeMesh);
 
 
@@ -63,9 +69,6 @@ window.onload = function init() {
     sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
     sphereMesh.position.set(4, 0, 0);
     scene.add(sphereMesh);
-
-
-
 
 
 
@@ -110,9 +113,10 @@ window.onload = function init() {
 
 
     light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
-    light.position.set(4, 5, 0);//光源位置置
+
+    light.position.set(0, 5, 0);//光源位置置
     var object = new THREE.Object3D();
-    object.position.set(4,0,0);
+    object.position.set(0,0,0);
     light.target = object;
     light.castShadow = true;
     light.shadowCameraVisible = true;
