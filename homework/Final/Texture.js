@@ -2,7 +2,8 @@ var scene = null;
 var camera = null;
 var renderer = null;
 var control = null;
-
+var cubeMesh = null;
+var sphereMesh = null;
 var id = null;
 var myCanvas = null;
 var light = null;
@@ -34,6 +35,35 @@ window.onload = function init() {
     plane2.position.y = -0.8;
     plane2.position.x = 0;
     plane2.receiveShadow = true;
+
+
+
+    var cubeGeo = new THREE.CubeGeometry(2, 2, 2, 5, 5, 5);
+    var cubeMat = new THREE.MeshPhongMaterial({
+        color:0xFF0000,
+        wireframe:false
+    });
+    cubeMesh = new THREE.Mesh(cubeGeo, cubeMat);
+    cubeMesh.rotation.y = -0.25*Math.PI;
+    cubeMesh.position.set(0, 0.5, 0);
+    scene.add(cubeMesh);
+
+
+    var texture = new THREE.TextureLoader().load( "cheen.png" );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 5, 5 );
+
+    var sphereGeo = new THREE.SphereGeometry(1.5, 40, 16);
+    var sphereMat = new THREE.MeshPhongMaterial({
+        map:texture,
+        color:0xFFFFFF,
+        wireframe:true
+    });
+    sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
+    sphereMesh.position.set(4, 0, 0);
+    scene.add(sphereMesh);
+
 
 
 
@@ -80,9 +110,9 @@ window.onload = function init() {
 
 
     light = new THREE.SpotLight(0xFFFFFF,1,50,0.5,0.1);//光源颜色
-    light.position.set(0, 5, 0);//光源位置置
+    light.position.set(4, 5, 0);//光源位置置
     var object = new THREE.Object3D();
-    object.position.set(0,0,0);
+    object.position.set(4,0,0);
     light.target = object;
     light.castShadow = true;
     light.shadowCameraVisible = true;
